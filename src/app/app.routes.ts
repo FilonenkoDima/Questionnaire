@@ -4,7 +4,7 @@ import { HomeComponent } from './features/home/home.component';
 import { QuestionManagementComponent } from './features/question-management/question-management.component';
 import { CreateQuestionComponent } from './features/question-management/create-question/create-question.component';
 import { ListOfQuestionsComponent } from './features/list-of-questions/list-of-questions.component';
-import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
+import { PageNotFoundComponent } from './core/shared/features/page-not-found/page-not-found.component';
 import { EditQuestionComponent } from './features/question-management/edit-question/edit-question.component';
 import { PATHS_ROUTES } from './core/shared/enums/paths.enum';
 

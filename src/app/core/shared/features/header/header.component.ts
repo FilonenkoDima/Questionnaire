@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { PATHS_ROUTES } from '../../core/shared/enums/paths.enum';
+import { PATHS_ROUTES } from '../../enums/paths.enum';
 
 @Component({
   selector: 'app-header',

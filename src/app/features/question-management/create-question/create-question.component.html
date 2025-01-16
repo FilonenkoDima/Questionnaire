@@ -1,1 +1,110 @@
-<p>create-question works!</p>
+<div class="mb-5">
+  <p>Pick question type</p>
+  <mat-radio-group
+    [(ngModel)]="selectedQuestionType">
+    @for (questionType of questionTypes; track $index) {
+      <mat-radio-button [value]="questionType">{{ formatQuestionType(questionType) }}</mat-radio-button>
+    }
+  </mat-radio-group>
+</div>
+
+@switch (selectedQuestionType) {
+  @case (QuestionType.SINGLE) {
+    <form [formGroup]="questionSingleAnswer" class="border rounded rounded-4 p-3 d-inline-block">
+      <mat-form-field>
+        <mat-label>Input Question</mat-label>
+        <input matInput formControlName="question" placeholder="Question"/>
+        <mat-error>Please enter a valid question.</mat-error>
+      </mat-form-field>
+
+      <p>Add minimum two answers</p>
+
+      <div formArrayName="answers">
+        @for (ans of questionSingleAnswer.value.answers; track $index) {
+          <div [formGroupName]="$index">
+            <span>{{ $index + 1 }}. </span>
+            <mat-form-field>
+              <mat-label>Input answer - {{ $index + 1 }}</mat-label>
+              <input matInput formControlName="answer" placeholder="Option {{ $index + 1 }}"/>
+            </mat-form-field>
+            <button mat-icon-button (click)="removeAnswer($index)">
+              <mat-icon>remove_circle</mat-icon>
+            </button>
+          </div>
+        }
+        @if (answersIsInvalid$ | async) {
+          <mat-error>Please add at least two answers.</mat-error>
+        }
+      </div>
+
+      <div class="mb-3">
+        <button (click)="addTestSingleAnswer()" mat-raised-button type="button">Add Answer</button>
+      </div>
+
+      @if (questionSingleAnswer.value.answers!.length > 1) {
+        <div>
+          <mat-form-field>
+            <mat-label>Favorite food</mat-label>
+            <mat-select formControlName="correctAnswerIndex">
+              @for (ans of questionSingleAnswer.value.answers; track $index) {
+                <mat-option [value]="$index">{{ $index + 1 }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+
+      <div class="text-end">
+        <button [disabled]="!questionSingleAnswer.valid" (click)="addQuestionSingleAnswer()" mat-raised-button
+                type="button">Display
+        </button>
+      </div>
+    </form>
+  }
+  @case (QuestionType.MULTI) {
+    <form [formGroup]="questionMultiAnswers" class="border rounded rounded-4 p-3 d-inline-block">
+      <mat-form-field>
+        <mat-label>Input Question</mat-label>
+        <input matInput formControlName="question" placeholder="Question"/>
+        <mat-error>Please enter a valid question.</mat-error>
+      </mat-form-field>
+
+      <p>Add minimum two questions</p>
+
+      <div formArrayName="answers">
+        @for (ans of questionMultiAnswers.value.answers; track $index) {
+          <div [formGroupName]="$index">
+            <span>{{ $index + 1 }}. </span>
+            <mat-checkbox value="true" formControlName="correct"></mat-checkbox>
+            <mat-form-field>
+              <mat-label>Input answer - {{ $index + 1 }}</mat-label>
+              <input matInput formControlName="answer" placeholder="Option {{ $index + 1 }}"/>
+            </mat-form-field>
+            <button mat-icon-button (click)="removeMultiAnswer($index)">
+              <mat-icon>remove_circle</mat-icon>
+            </button>
+          </div>
+        }
+        @if (multiAnswersIsInvalid$ | async) {
+          <mat-error>Please add at least two answers.</mat-error>
+        }
+      </div>
+
+      <div class="mb-3">
+        <button (click)="addTestMultiAnswers()" mat-raised-button type="button">Add Answer</button>
+      </div>
+
+      <div class="text-end">
+        <button [disabled]="!questionMultiAnswers.valid || questionMultiAnswers.value.answers!.length < 2 || !hasAtLeastOneCorrectAnswer()" (click)="addQuestionMultiAnswer()" mat-raised-button
+                type="button">Display
+        </button>
+      </div>
+    </form>
+  }
+  @case (QuestionType.OPEN) {
+    <p>!</p>
+  }
+  @default {
+
+  }
+}
