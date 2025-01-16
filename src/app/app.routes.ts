@@ -6,13 +6,20 @@ import { CreateQuestionComponent } from './features/question-management/create-q
 import { ListOfQuestionsComponent } from './features/list-of-questions/list-of-questions.component';
 import { PageNotFoundComponent } from './features/page-not-found/page-not-found.component';
 import { EditQuestionComponent } from './features/question-management/edit-question/edit-question.component';
+import { PATHS_ROUTES } from './core/shared/enums/paths.enum';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: 'home/questions-management', component: QuestionManagementComponent, },
-  { path: 'home/questions-management/create-question', component: CreateQuestionComponent, },
-  { path: 'home/questions-management/edit-question', component: EditQuestionComponent, },
-  { path: 'home/list-of-questions', component: ListOfQuestionsComponent, },
-  { path: '**', component: PageNotFoundComponent },
+  { path: '', redirectTo: PATHS_ROUTES.HOME, pathMatch: 'full' },
+  { path: PATHS_ROUTES.HOME, component: HomeComponent },
+  { path: `${PATHS_ROUTES.HOME}/${PATHS_ROUTES.QUESTIONS_MANAGEMENT}`, component: QuestionManagementComponent, },
+  {
+    path: `${PATHS_ROUTES.HOME}/${PATHS_ROUTES.QUESTIONS_MANAGEMENT}/${PATHS_ROUTES.CREATE_QUESTION}`,
+    component: CreateQuestionComponent,
+  },
+  {
+    path: `${PATHS_ROUTES.HOME}/${PATHS_ROUTES.QUESTIONS_MANAGEMENT}/${PATHS_ROUTES.EDIT_QUESTION}`,
+    component: EditQuestionComponent,
+  },
+  { path: `${PATHS_ROUTES.HOME}/${PATHS_ROUTES.LIST_OF_QUESTIONS}`, component: ListOfQuestionsComponent, },
+  { path: PATHS_ROUTES.INVALID_PATH, component: PageNotFoundComponent },
 ];
