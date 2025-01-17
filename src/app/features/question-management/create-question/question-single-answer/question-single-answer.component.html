@@ -1,0 +1,58 @@
+<form [formGroup]="question" class="border rounded rounded-4 p-3 d-inline-block">
+  <h4 class="text-body-secondary m-2 mb-3">Add question with single answer</h4>
+  <hr/>
+  <mat-form-field>
+    <mat-label>Input Question</mat-label>
+    <input matInput formControlName="question" placeholder="Question"/>
+    @if (question.value.question) {
+      <button matSuffix mat-icon-button aria-label="Clear" (click)="question.controls.question.reset()">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+    <mat-error>Please enter a valid question.</mat-error>
+  </mat-form-field>
+
+  <p class="text-black text-opacity-50">Add minimum two answers</p>
+
+  <div formArrayName="answers">
+    @for (ans of question.value.answers; track $index) {
+      <div [formGroupName]="$index" class="d-flex align-items-baseline mb-2">
+        <span class="me-2">{{ $index + 1 }}.</span>
+        <mat-form-field class="flex-grow-1">
+          <mat-label>Input answer - {{ $index + 1 }}</mat-label>
+          <input matInput formControlName="answer" placeholder="Option {{ $index + 1 }}"/>
+          <mat-error>Input valid answer.</mat-error>
+        </mat-form-field>
+        <button mat-icon-button (click)="removeAnswer($index)" class="ms-2">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+      </div>
+    }
+    @if (answersIsInvalid$ | async) {
+      <mat-error>Please add at least two answers.</mat-error>
+    }
+  </div>
+
+  <div class="mb-3">
+    <button (click)="addAnswer()" mat-raised-button type="button">Add Answer</button>
+  </div>
+
+  @if (question.value.answers!.length > 1) {
+    <div>
+      <mat-form-field>
+        <mat-label>Favorite food</mat-label>
+        <mat-select formControlName="correctAnswerIndex">
+          @for (ans of question.value.answers; track $index) {
+            <mat-option [value]="$index">{{ $index + 1 }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  }
+
+  <div class="text-end">
+    <button [disabled]="!question.valid" (click)="saveQuestion()" mat-raised-button
+            type="button">Display
+    </button>
+  </div>
+</form>

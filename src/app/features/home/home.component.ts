@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
-import { PATHS_ROUTES } from '../../core/shared/enums/paths.enum';
+import { PATHS_ROUTES } from '../../core/enums/paths.enum';
 
 @Component({
   selector: 'app-home',

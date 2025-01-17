@@ -1,4 +1,6 @@
-export enum PATHS_ROUTES {
+import { QuestionType } from '../shared/enums/questionTypes.enum';
+
+enum PATHS_ROUTE {
   INVALID_PATH = '**',
   HOME = 'home',
   QUESTIONS_MANAGEMENT = 'questions-management',
@@ -6,3 +8,5 @@ export enum PATHS_ROUTES {
   EDIT_QUESTION = 'edit-question',
   LIST_OF_QUESTIONS = 'list-of-questions',
 }
+
+export const PATHS_ROUTES = { ...PATHS_ROUTE, ...QuestionType }
