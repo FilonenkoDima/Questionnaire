@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { PATHS_ROUTES } from "../../core/enums/paths.enum";
 
 @Component({
   selector: 'app-question-management',
@@ -11,4 +12,5 @@ import { RouterLink } from '@angular/router';
 })
 export class QuestionManagementComponent {
 
+  protected readonly PATHS_ROUTES = PATHS_ROUTES;
 }

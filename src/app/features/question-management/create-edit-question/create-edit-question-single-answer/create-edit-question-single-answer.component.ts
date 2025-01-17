@@ -8,12 +8,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { map, Observable } from 'rxjs';
-import { IQuestionStrategy } from '../question.strategy';
+import { ICreateEditQuestionStrategy } from '../create-edit-question.strategy';
 import { QuestionService } from '../../../../core/shared/services/question.service';
 import { QuestionType } from '../../../../core/shared/enums/questionTypes.enum';
 
+interface IQuestion {
+  type: QuestionType;
+  dateCreated: number;
+  data: {
+    question: string;
+    answers: { answer: string }[];
+    correctAnswerIndex: number;
+  };
+}
+
 @Component({
-  selector: 'app-question-single-answer',
+  selector: 'app-create-edit-question-single-answer',
   imports: [
     AsyncPipe,
     FormsModule,
@@ -29,36 +39,43 @@ import { QuestionType } from '../../../../core/shared/enums/questionTypes.enum';
     MatSuffix,
     ReactiveFormsModule
   ],
-  templateUrl: './question-single-answer.component.html',
-  styleUrl: './question-single-answer.component.css'
+  templateUrl: './create-edit-question-single-answer.component.html',
+  styleUrl: './create-edit-question-single-answer.component.css'
 })
-export class QuestionSingleAnswerComponent implements IQuestionStrategy, OnInit {
+export class CreateEditQuestionSingleAnswerComponent implements ICreateEditQuestionStrategy, OnInit {
   private formBuilder = inject(FormBuilder);
   private questionService = inject(QuestionService);
 
-  inputData = input();
+  inputData = input<IQuestion>({
+    "type": "question-single-answer" as QuestionType,
+    "dateCreated": 1737111765073,
+    "data": { "question": "ry", "answers": [{ "answer": "rtyrye" }, { "answer": "reyrey" }], "correctAnswerIndex": 0 }
+  });
 
   question = this.formBuilder.group({
     question: ['', Validators.required],
     answers: this.formBuilder.array([], Validators.required),
-    correctAnswerIndex: ['', Validators.required],
+    correctAnswerIndex: [-1, Validators.required],
   });
 
   ngOnInit(): void {
-    if(this.inputData()) {
+    this.setData();
+  }
+
+  setData() {
+    if (this.inputData()) {
+      const data = this.inputData()?.data;
       this.question.patchValue({
-        question: this.inputData().question,
-        correctAnswerIndex: data.correctAnswerIndex,
+        question: data?.question,
+        correctAnswerIndex: data?.correctAnswerIndex,
       });
 
-      // Очищаємо існуючі елементи FormArray
-      this.answers.clear();
+      this.question.controls.answers.clear();
 
-      // Додаємо нові елементи з отриманих даних
-      data.answers.forEach(answer => {
-        this.answers.push(this.formBuilder.group({
-          answer: [answer.answer, Validators.required]
-        }));
+      data?.answers.forEach(answer => {
+        (this.question.get('answers') as FormArray).push(this.formBuilder.group({
+          answer: [answer.answer, Validators.required],
+        }))
       });
     }
   }

@@ -7,10 +7,10 @@ import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/f
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { map, Observable } from 'rxjs';
-import { IQuestionStrategy } from '../question.strategy';
+import { ICreateEditQuestionStrategy } from '../create-edit-question.strategy';
 
 @Component({
-  selector: 'app-question-multi-answers',
+  selector: 'app-create-edit-question-multi-answers',
   imports: [
     AsyncPipe,
     FormsModule,
@@ -25,10 +25,10 @@ import { IQuestionStrategy } from '../question.strategy';
     MatSuffix,
     ReactiveFormsModule
   ],
-  templateUrl: './question-multi-answers.component.html',
-  styleUrl: './question-multi-answers.component.css'
+  templateUrl: './create-edit-question-multi-answers.component.html',
+  styleUrl: './create-edit-question-multi-answers.component.css'
 })
-export class QuestionMultiAnswersComponent implements IQuestionStrategy {
+export class CreateEditQuestionMultiAnswersComponent implements ICreateEditQuestionStrategy {
   private formBuilder = inject(FormBuilder);
 
   question = this.formBuilder.group({

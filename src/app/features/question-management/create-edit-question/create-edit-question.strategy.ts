@@ -1,6 +1,6 @@
 import { FormGroup } from '@angular/forms';
 
-export interface IQuestionStrategy {
+export interface ICreateEditQuestionStrategy {
   question: FormGroup;
   saveQuestion: () => void;
 }

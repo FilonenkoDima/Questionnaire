@@ -1,0 +1,27 @@
+<div class="border rounded rounded-4 p-3 d-inline-block">
+@if(userAnswer){
+  <label>Question</label>
+  <h5>{{ question }}</h5>
+  <label>Answer</label>
+  <p>{{ answer }}</p>
+} @else {
+  <form [formGroup]="inputAnswer">
+    <label>Question</label>
+    <h5>{{ question }}</h5>
+    <mat-form-field>
+      <mat-label>Input Answer</mat-label>
+      <input matInput formControlName="answer" placeholder="Answer" />
+      @if (inputAnswer.value.answer) {
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="inputAnswer.controls.answer.reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+      <mat-error>Please enter a valid question.</mat-error>
+    </mat-form-field>
+  </form>
+  <div class="d-flex gap-2">
+    <button type="button" (click)="onAnswer()" class="btn btn-success">{{ userAnswer ? 'Re-Answer' : 'Answer' }}</button>
+    <button type="button" class="btn btn-info">Edit</button>
+  </div>
+ }
+</div>

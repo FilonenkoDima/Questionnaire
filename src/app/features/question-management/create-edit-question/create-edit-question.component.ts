@@ -9,7 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-create-question',
+  selector: 'app-create-edit-question',
   imports: [
     MatRadioGroup,
     MatRadioButton,
@@ -22,10 +22,9 @@ import { RouterLink, RouterOutlet } from '@angular/router';
     RouterOutlet,
     RouterLink
   ],
-  templateUrl: './create-question.component.html',
-  styleUrl: './create-question.component.css'
+  templateUrl: './create-edit-question.component.html',
 })
-export class CreateQuestionComponent {
+export class CreateEditQuestionComponent {
   selectedQuestionType!: QuestionType;
   questionTypes = Object.values(QuestionType);
   protected readonly QuestionType = QuestionType;
