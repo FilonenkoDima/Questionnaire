@@ -4,7 +4,8 @@ import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/f
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
-import { QuestionService } from '../../../core/shared/services/question.service';
+import { allQuestion, QuestionService } from '../../../core/shared/services/question.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-display-question-open-answer',
@@ -25,6 +26,7 @@ import { QuestionService } from '../../../core/shared/services/question.service'
 export class DisplayQuestionOpenAnswerComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private questionService = inject(QuestionService);
+  private router = inject(Router);
 
   questionData = input.required<any>();
   answer?: string;
@@ -37,12 +39,27 @@ export class DisplayQuestionOpenAnswerComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.questionData());
-    this.question = this.questionData().data.question;
+    this.question = this.questionData().question;
     this.answer = this.questionData().data.answer;
-    this.userAnswer = this.questionData().userAnswer;
+    this.userAnswer = this.questionData().data.userAnswer;
   }
 
   onAnswer() {
-    this.questionService.answerQuestion(this.questionData().id, this.inputAnswer.value.answer)
+    this.questionService.answerQuestion(this.questionData().id, { answer: this.answer, userAnswer: this.inputAnswer.value.answer } as allQuestion)
+  }
+
+  onReAnswer() {
+    this.questionService.reAnswerQuestion(this.questionData().id)
+  }
+
+  onEdit(){
+    this.router.navigate(['/home/questions-management/create-question/question-open-answer'], {
+      queryParams: { id: this.questionData().id }
+    }).catch(err => console.error('Navigation error:', err));
+  }
+
+  onDelete() {
+    console.log(1)
+    this.questionService.deleteQuestion(this.questionData().id)
   }
 }

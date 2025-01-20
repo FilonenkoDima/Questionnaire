@@ -3,13 +3,31 @@ import { BehaviorSubject } from 'rxjs';
 import { QuestionType } from '../enums/questionTypes.enum';
 import { Guid } from 'guid-typescript';
 
-interface Question {
+export interface Question {
   id: string;
   type: QuestionType;
   dateCreated: number;
-  data: any;
-  userAnswer?: any;
+  question: string;
+  data: allQuestion;
 }
+
+interface OpenAnswerQuestion {
+  answer: string;
+  userAnswer?: string;
+}
+
+interface SingleAnswerQuestion {
+  answer: { answer: string }[];
+  correctIndex: number;
+  userAnswer?: number;
+}
+
+interface MultiAnswerQuestion {
+  answer: { answer: string; correct: boolean }[];
+  userAnswer?: string[];
+}
+
+export type allQuestion = OpenAnswerQuestion | SingleAnswerQuestion | MultiAnswerQuestion;
 
 @Injectable({
   providedIn: 'root',
@@ -18,11 +36,12 @@ export class QuestionService {
   private questionsSubject = new BehaviorSubject<Question[]>(this.loadQuestionsFromLocalStorage());
   public questions$ = this.questionsSubject.asObservable();
 
-  saveQuestion(questionType: QuestionType, data: any): void {
+  saveQuestion(questionType: QuestionType, question: string, data: allQuestion): void {
     const newQuestion: Question = {
       id: Guid.create().toString(),
       type: questionType,
       dateCreated: new Date().getTime(),
+      question: question,
       data: data,
     };
 
@@ -60,14 +79,14 @@ export class QuestionService {
     localStorage.setItem(question.id, JSON.stringify(question));
   }
 
-  answerQuestion(questionId: string, answer: any): void {
+  answerQuestion(questionId: string, data: allQuestion): void {
     const currentQuestions = this.questionsSubject.value;
     const questionIndex = currentQuestions.findIndex((q) => q.id === questionId);
 
     if (questionIndex !== -1) {
       const updatedQuestion = {
         ...currentQuestions[questionIndex],
-        userAnswer: answer,
+        data: data,
       };
 
       const updatedQuestions = [...currentQuestions];
@@ -78,5 +97,66 @@ export class QuestionService {
     } else {
       console.warn(`Question with ID ${questionId} not found.`);
     }
+  }
+
+  updateQuestion(question: Question): void {
+    const currentQuestions = this.questionsSubject.value;
+    const questionIndex = currentQuestions.findIndex((q) => q.id === question.id);
+
+    if (questionIndex !== -1) {
+      const updatedQuestions = [...currentQuestions];
+      updatedQuestions[questionIndex] = question;
+
+      localStorage.setItem(question.id, JSON.stringify(question));
+      this.questionsSubject.next(updatedQuestions);
+    } else {
+      console.warn(`Question with ID ${question.id} not found.`);
+    }
+  }
+
+  reAnswerQuestion(questionId: string): void {
+    const currentQuestions = this.questionsSubject.value;
+    const questionIndex = currentQuestions.findIndex((q) => q.id === questionId);
+
+    if (questionIndex !== -1) {
+      const updatedQuestion = {
+        ...currentQuestions[questionIndex],
+        data: { ...currentQuestions[questionIndex].data, userAnswer: undefined },
+      };
+
+      const updatedQuestions = [...currentQuestions];
+      updatedQuestions[questionIndex] = updatedQuestion;
+
+      localStorage.setItem(questionId, JSON.stringify(updatedQuestion));
+      this.questionsSubject.next(updatedQuestions);
+    } else {
+      console.warn(`Question with ID ${questionId} not found.`);
+    }
+  }
+
+  getQuestionById(questionId: string): Question {
+    const currentQuestions = this.questionsSubject.value;
+    const questionIndex = currentQuestions.findIndex((q) => q.id === questionId);
+
+    if (questionIndex !== -1) {
+      return currentQuestions[questionIndex]
+    } else {
+      console.warn(`Question with ID ${questionId} not found.`);
+      throw new Error(`Question with ID ${questionId} not found.`);
+    }
+  }
+
+  deleteQuestion(questionId: string): void {
+    const currentQuestions = this.questionsSubject.value;
+    const updatedQuestions = currentQuestions.filter(q => q.id !== questionId);
+
+    if (currentQuestions.length === updatedQuestions.length) {
+      console.warn(`Question with ID ${questionId} not found.`);
+      return;
+    }
+
+    localStorage.removeItem(questionId);
+
+    this.questionsSubject.next(updatedQuestions);
   }
 }

@@ -18,14 +18,26 @@ import { map } from 'rxjs';
 })
 export class DisplayQuestionComponent {
   private questionService: QuestionService = inject(QuestionService);
-  questions$=this.questionService.questions$
+  questions$= this.questionService.questions$.pipe(
+    map(questions =>
+      [...questions].sort((a, b) => a.dateCreated - b.dateCreated)
+    )
+  );
 
   toAnswerQuestions$ = this.questions$.pipe(
-    map(questions => questions.filter(q => q.type === QuestionType.QUESTION_OPEN_ANSWER && !q.userAnswer))
+    map(questions =>
+      questions
+        .filter(q => q.type === QuestionType.QUESTION_OPEN_ANSWER && !q.data.userAnswer)
+        .sort((a, b) => a.dateCreated - b.dateCreated)
+    )
   );
 
   answeredQuestions$ = this.questions$.pipe(
-    map(questions => questions.filter(q => q.type === QuestionType.QUESTION_OPEN_ANSWER && q.userAnswer))
+    map(questions =>
+      questions
+        .filter(q => q.type === QuestionType.QUESTION_OPEN_ANSWER && q.data.userAnswer)
+        .sort((a, b) => a.dateCreated - b.dateCreated)
+    )
   );
 
   protected readonly QuestionType = QuestionType;

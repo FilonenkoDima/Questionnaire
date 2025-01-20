@@ -5,8 +5,9 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { ICreateEditQuestionStrategy } from '../create-edit-question.strategy';
-import { QuestionService } from '../../../../core/shared/services/question.service';
+import { allQuestion, Question, QuestionService } from '../../../../core/shared/services/question.service';
 import { QuestionType } from '../../../../core/shared/enums/questionTypes.enum';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-edit-question-open-answer',
@@ -24,14 +25,44 @@ import { QuestionType } from '../../../../core/shared/enums/questionTypes.enum';
 export class CreateEditQuestionOpenAnswerComponent implements ICreateEditQuestionStrategy {
   private formBuilder = inject(FormBuilder);
   private questionService: QuestionService = inject(QuestionService);
+  private readonly route = inject(ActivatedRoute);
+
+  questionFromStorage?: Question;
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.queryParamMap.get('id');
+    console.log(id);
+    if (id) {
+      this.questionFromStorage = this.questionService.getQuestionById(id);
+      this.setData();
+    }
+  }
 
   question = this.formBuilder.group({
     question: ['', Validators.required],
     answer: ['', Validators.required],
   });
 
+  setData() {
+    if (this.questionFromStorage) {
+      this.question.patchValue({
+        question: this.questionFromStorage!.question,
+        answer: this.questionFromStorage!.data.answer as string,
+      });
+    }
+  }
+
   saveQuestion() {
-    this.questionService.saveQuestion(QuestionType.QUESTION_OPEN_ANSWER, this.question.value)
+    if (!this.questionFromStorage) {
+      console.log('1')
+      this.questionService.saveQuestion(QuestionType.QUESTION_OPEN_ANSWER, this.question.value.question!, {
+        answer: this.question.value.answer!
+      } as allQuestion);
+    } else {
+      this.questionFromStorage.question = this.question.value.question!;
+      this.questionFromStorage.data.answer = this.question.value.answer!;
+      this.questionService.updateQuestion(this.questionFromStorage!);
+    }
     console.log(this.question.value);
   }
 }

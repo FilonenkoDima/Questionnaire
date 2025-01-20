@@ -101,6 +101,6 @@ export class CreateEditQuestionSingleAnswerComponent implements ICreateEditQuest
 
   saveQuestion() {
     console.log(this.question.value);
-    this.questionService.saveQuestion(QuestionType.QUESTION_SINGLE_ANSWER, this.question.value)
+    // this.questionService.saveQuestion(QuestionType.QUESTION_SINGLE_ANSWER, this.question.value)
   }
 }

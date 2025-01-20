@@ -7,9 +7,9 @@
     <input matInput placeholder="Answer" [value]="userAnswer" [disabled]="userAnswer.length > 0" />
   </mat-form-field>
   <div class="d-flex gap-2">
-    <button type="button" class="btn btn-success">Re-Answer</button>
-    <button type="button" class="btn btn-info">Edit</button>
-    <button type="button" class="btn btn-danger">Delete</button>
+    <button (click)="onReAnswer()" type="button" class="btn btn-success">Re-Answer</button>
+    <button (click)="onEdit()" type="button" class="btn btn-info">Edit</button>
+    <button (click)="onDelete()" type="button" class="btn btn-danger">Delete</button>
   </div>
 } @else {
   <form [formGroup]="inputAnswer">
@@ -28,8 +28,8 @@
   </form>
   <div class="d-flex gap-2">
     <button type="button" (click)="onAnswer()" class="btn btn-success">{{ userAnswer ? 'Re-Answer' : 'Answer' }}</button>
-    <button type="button" class="btn btn-info">Edit</button>
-    <button type="button" class="btn btn-danger">Delete</button>
+    <button type="button" (click)="onEdit()" class="btn btn-info">Edit</button>
+    <button type="button" (click)="onDelete()" class="btn btn-danger">Delete</button>
   </div>
  }
 </div>
