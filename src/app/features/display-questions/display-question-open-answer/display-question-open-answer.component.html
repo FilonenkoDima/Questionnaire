@@ -2,8 +2,15 @@
 @if(userAnswer){
   <label>Question</label>
   <h5>{{ question }}</h5>
-  <label>Answer</label>
-  <p>{{ answer }}</p>
+  <mat-form-field>
+    <mat-label>Answer</mat-label>
+    <input matInput placeholder="Answer" [value]="userAnswer" [disabled]="userAnswer.length > 0" />
+  </mat-form-field>
+  <div class="d-flex gap-2">
+    <button type="button" class="btn btn-success">Re-Answer</button>
+    <button type="button" class="btn btn-info">Edit</button>
+    <button type="button" class="btn btn-danger">Delete</button>
+  </div>
 } @else {
   <form [formGroup]="inputAnswer">
     <label>Question</label>
@@ -22,6 +29,7 @@
   <div class="d-flex gap-2">
     <button type="button" (click)="onAnswer()" class="btn btn-success">{{ userAnswer ? 'Re-Answer' : 'Answer' }}</button>
     <button type="button" class="btn btn-info">Edit</button>
+    <button type="button" class="btn btn-danger">Delete</button>
   </div>
  }
 </div>

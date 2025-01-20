@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -22,7 +22,7 @@ import { QuestionService } from '../../../core/shared/services/question.service'
   templateUrl: './display-question-open-answer.component.html',
   styleUrl: './display-question-open-answer.component.css'
 })
-export class DisplayQuestionOpenAnswerComponent {
+export class DisplayQuestionOpenAnswerComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private questionService = inject(QuestionService);
 
